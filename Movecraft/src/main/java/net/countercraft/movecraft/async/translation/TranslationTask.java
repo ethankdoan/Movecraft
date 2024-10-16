@@ -86,11 +86,11 @@ public class TranslationTask extends AsyncTask {
         oldHitBox = c.getHitBox();
         oldFluidList = new SetHitBox(c.getFluidLocations());
         newFluidList = new SetHitBox();
+
     }
 
     @Override
     protected void execute() throws InterruptedException, ExecutionException {
-
         //Check if there's anything to move
         if (oldHitBox.isEmpty())
             return;
@@ -116,7 +116,7 @@ public class TranslationTask extends AsyncTask {
         final int minY = oldHitBox.getMinY();
         final int maxY = oldHitBox.getMaxY();
 
-        // proccess nether portals
+        // process nether portals
         processAllNetherPortals();
 
         // ensure chunks are loaded only if world is different or change in location is
@@ -173,11 +173,12 @@ public class TranslationTask extends AsyncTask {
 
             final Material testMaterial = newLocation.toBukkit(world).getBlock().getType();
 
-            if (Tags.CHESTS.contains(testMaterial) && checkChests(testMaterial, newLocation)) {
+            if (Tags.CHESTS.contains(testMaterial) && checkChests(testMaterial, newLocation) && !(craft instanceof SinkingCraft)) {
                 //prevent chests collision
                 fail(String.format(I18nSupport.getInternationalisedString("Translation - Failed Craft is obstructed")
                                 + " @ %d,%d,%d,%s", newLocation.getX(), newLocation.getY(), newLocation.getZ(),
                         newLocation.toBukkit(craft.getWorld()).getBlock().getType()));
+
                 return;
             }
             if (!withinWorldBorder(world, newLocation)) {
